@@ -1,0 +1,6 @@
+<!--
+  This view is used to render the installed plugins page.
+-->
+<div>
+  This plugin gives the ability to copy the contents of a file into an environmental variable
+</div>
