@@ -1,2 +1,5 @@
 # https://github.com/github/gitignore/blob/master/Maven.gitignore
 target/
+
+# jenkins specific
+work/
