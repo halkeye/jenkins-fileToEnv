@@ -10,11 +10,9 @@ import hudson.model.BuildListener;
 import hudson.model.EnvironmentContributingAction;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
-import java.io.*;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
@@ -35,7 +33,7 @@ public class FileToEnv extends Builder {
 
 
     @Override
-    public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
+    public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) throws InterruptedException {
         //String fileName = getDescriptor().getFileName();
         //String envName = getDescriptor().getEnvName();
 
@@ -62,8 +60,6 @@ public class FileToEnv extends Builder {
             if (envData != null) {
                 envData.add(envName, fileContents);
             }
-        } catch (InterruptedException ex) {
-            listener.getLogger().println("InterruptedException " + ex);
         } catch (IOException ex) {
             listener.getLogger().println("IOException " + ex);
             // FIXME
