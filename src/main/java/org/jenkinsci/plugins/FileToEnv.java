@@ -20,6 +20,7 @@ import org.kohsuke.stapler.StaplerRequest;
 public class FileToEnv extends Builder {
     private final String fileName;
     private final String envName;
+    private String fileContents;
 
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     @DataBoundConstructor
@@ -30,7 +31,6 @@ public class FileToEnv extends Builder {
     
     public String getFileName() { return fileName; }
     public String getEnvName() { return envName; }
-
 
     @Override
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) throws InterruptedException {
@@ -52,21 +52,34 @@ public class FileToEnv extends Builder {
                 return false;
             }
             
-            String fileContents = filePath.readToString();
+            fileContents = filePath.readToString();
+            listener.getLogger().println("Contents: "+ fileContents);
             vars.put(envName, fileContents);
 
+            EnvironmentContributingAction environmentAction = new EnvironmentContributingAction() {
+                public void buildEnvVars(AbstractBuild<?,?> build, EnvVars env) {
+                    System.err.println("Adding " + envName + " with " + fileContents);
+                    env.put(envName, fileContents);
+                }
+                public String getDisplayName() { return null; }
+                public String getIconFileName() { return null; }
+                public String getUrlName() { return null; }
+            };
+
+            System.err.println("Adding");
+            build.getActions().add(environmentAction);
+            System.err.println(" DoneAdding");
             
-            EnvAction envData = build.getAction(EnvAction.class);
-            if (envData != null) {
-                envData.add(envName, fileContents);
-            }
+            vars = build.getEnvironment(listener);
+            System.err.println(vars.expand("Success env ${LAST_GIT_CHANGELOG}"));
+
         } catch (IOException ex) {
             listener.getLogger().println("IOException " + ex);
             // FIXME
             return false;
         }
         
-        listener.getLogger().println("Success env");
+        listener.getLogger().println("Success");
 
         return true;
     }
@@ -126,23 +139,6 @@ public class FileToEnv extends Builder {
         public String getEnvName() {
             return envName;
         }
-    }
-    
-    private static class EnvAction implements EnvironmentContributingAction {
-        private transient Map<String,String> data = new HashMap<String,String>();
-
-        private void add(String key, String value) {
-            if (data==null) return;
-            data.put(key, value);
-        }
-
-        public void buildEnvVars(AbstractBuild<?,?> build, EnvVars env) {
-            if (data!=null) env.putAll(data);
-        }
-
-        public String getIconFileName() { return null; }
-        public String getDisplayName() { return null; }
-        public String getUrlName() { return null; }
     }
 }
 
