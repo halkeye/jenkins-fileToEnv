@@ -55,12 +55,24 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
-        <version>1.2</version>
+        <version>2.5.5</version>
         <configuration>
           <findbugsXmlOutput>true</findbugsXmlOutput>
           <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
           <xmlOutput>true</xmlOutput>
+          <!-- Build doesn't fail if problems are found -->
+          <failOnError>false</failOnError>
         </configuration>
+        <executions>
+          <!-- Ensures that FindBugs inspects source code when project is compiled.  -->
+          <execution>
+            <id>analyze-compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>findbugs</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
