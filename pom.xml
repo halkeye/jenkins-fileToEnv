@@ -29,9 +29,9 @@
   </repositories>
   
   <scm>
-    <connection>scm:git:ssh://github.com/jenkinsci/fileToEnv-plugin.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com/jenkinsci/fileToEnv-plugin.git</developerConnection>
-    <url>https://github.com/jenkinsci/fileToEnv-plugin</url>
+    <connection>scm:git:ssh://github.com/jenkinsci/jenkins-fileToEnv.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/jenkinsci/jenkins-fileToEnv.git</developerConnection>
+    <url>https://github.com/jenkinsci/jenkins-fileToEnv</url>
   </scm>
 
   <url>http://wiki.jenkins-ci.org/display/JENKINS/fileToEnv+Plugin</url>
